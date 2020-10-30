@@ -9,10 +9,10 @@ plugins {
 ext {
     versionMajor = 1
     versionMinor = 0
-    versionPatch = 5
+    versionPatch = 6
     mGroupId = "com.gundamd.mylibrary"
     mArtifactId = "test-publishing-github-package"
-    mVersionCode = 6
+    mVersionCode = 7
     mVersionName = generateVersionName(versionMajor, versionMinor, versionPatch)
     mLibraryName = "MyLibrary"
     mLibraryDescription = "My Library for test"
@@ -98,7 +98,7 @@ afterEvaluate {
                 url = uri("https://maven.pkg.github.com/GundamD/test-publishing-github-package")
                 credentials {
                     username = System.getenv("GPR_USER")
-                    password = System.getenv("GPR_API_KEY")
+                    password = System.getenv("GPR_KEY")
                 }
             }
         }
