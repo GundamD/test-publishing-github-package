@@ -12,10 +12,10 @@ localProperties.load(new FileInputStream(rootProject.file("local.properties"))) 
 ext {
     versionMajor = 1
     versionMinor = 0
-    versionPatch = 3
+    versionPatch = 4
     mGroupId = "com.gundamd.mylibrary"
     mArtifactId = "test-publishing-github-package"
-    mVersionCode = 1
+    mVersionCode = 5
     mVersionName = generateVersionName(versionMajor, versionMinor, versionPatch)
     mLibraryName = "MyLibrary"
     mLibraryDescription = "My Library for test"
