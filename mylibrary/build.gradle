@@ -1,6 +1,33 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'maven-publish'  // 1. Apply plugin
+}
+
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties"))) //Set env variable GPR_USER & GPR_API_KEY if not adding a properties file
+
+
+// 2. Declare library details
+ext {
+    versionMajor = 1
+    versionMinor = 0
+    versionPatch = 0
+    mGroupId = "com.gundamd.mylibrary"
+    mArtifactId = "test-publishing-github-package"
+    mVersionCode = generateVersionCode()
+    mVersionName = generateVersionName(versionMajor, versionMinor, versionPatch, mVersionCode)
+    mLibraryName = "MyLibrary"
+    mLibraryDescription = "My Library for test"
+}
+
+def static generateVersionCode() {
+    return (System.currentTimeMillis() / 1000).toInteger()
+}
+
+def static generateVersionName(versionMajor, versionMinor, versionPatch, versionCode) {
+    String versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
+    return "${versionName}-${versionCode}"
 }
 
 android {
@@ -42,3 +69,45 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
+// 3. Declare task for creation of android sources.
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+}
+
+// 4. Make configuration for publishing artifact.
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId mGroupId
+                artifactId mArtifactId
+                version mVersionName
+
+                from components.release
+
+                artifact androidSourcesJar
+
+                pom {
+                    name = mLibraryName
+                    description = mLibraryDescription
+                }
+            }
+        }
+
+        // 5. Update repository details and credentials.
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/GundamD/test-publishing-github-package")
+                credentials {
+                    username = localProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                    password = localProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+                }
+            }
+        }
+    }
+}
+
+// Assembling should be performed before publishing package
+publish.dependsOn assemble
