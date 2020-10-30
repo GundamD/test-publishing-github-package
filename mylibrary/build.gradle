@@ -15,8 +15,8 @@ ext {
     versionPatch = 0
     mGroupId = "com.gundamd.mylibrary"
     mArtifactId = "test-publishing-github-package"
-    mVersionCode = generateVersionCode()
-    mVersionName = generateVersionName(versionMajor, versionMinor, versionPatch, mVersionCode)
+    mVersionCode = 1
+    mVersionName = generateVersionName(versionMajor, versionMinor, versionPatch)
     mLibraryName = "MyLibrary"
     mLibraryDescription = "My Library for test"
 }
@@ -25,9 +25,9 @@ def static generateVersionCode() {
     return (System.currentTimeMillis() / 1000).toInteger()
 }
 
-def static generateVersionName(versionMajor, versionMinor, versionPatch, versionCode) {
+def static generateVersionName(versionMajor, versionMinor, versionPatch) {
     String versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
-    return "${versionName}-${versionCode}"
+    return "${versionName}"
 }
 
 android {
@@ -37,8 +37,8 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode mVersionCode
+        versionName mVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
