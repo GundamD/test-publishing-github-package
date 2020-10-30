@@ -4,18 +4,15 @@ plugins {
     id 'maven-publish'  // 1. Apply plugin
 }
 
-def localProperties = new Properties()
-localProperties.load(new FileInputStream(rootProject.file("local.properties"))) //Set env variable GPR_USER & GPR_API_KEY if not adding a properties file
-
 
 // 2. Declare library details
 ext {
     versionMajor = 1
     versionMinor = 0
-    versionPatch = 4
+    versionPatch = 5
     mGroupId = "com.gundamd.mylibrary"
     mArtifactId = "test-publishing-github-package"
-    mVersionCode = 5
+    mVersionCode = 6
     mVersionName = generateVersionName(versionMajor, versionMinor, versionPatch)
     mLibraryName = "MyLibrary"
     mLibraryDescription = "My Library for test"
@@ -100,8 +97,8 @@ afterEvaluate {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/GundamD/test-publishing-github-package")
                 credentials {
-                    username = localProperties['gpr.usr'] ?: System.getenv("GPR_USER")
-                    password = localProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+                    username = System.getenv("GPR_USER")
+                    password = System.getenv("GPR_API_KEY")
                 }
             }
         }
